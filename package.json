@@ -1,0 +1,17 @@
+{
+  "name": "lamdion.test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "link": "cd Lambda && npm link @di-on.solutions/lamdion",
+    "build": "cd Lambda && npm run build",
+    "deploy": "serverless deploy",
+    "provideAWS": "npm run build && npm run deploy"
+  },
+  "author": "DI-ON.solutions",
+  "license": "ISC",
+  "dependencies": {
+    "serverless-pseudo-parameters": "^2.5.0"
+  }
+}
