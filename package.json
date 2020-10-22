@@ -12,6 +12,7 @@
   "author": "DI-ON.solutions",
   "license": "ISC",
   "dependencies": {
-    "serverless-pseudo-parameters": "^2.5.0"
+    "serverless-pseudo-parameters": "^2.5.0",
+    "uuid": "^8.3.1"
   }
 }

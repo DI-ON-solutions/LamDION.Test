@@ -118,6 +118,14 @@ functions:
           arn: !GetAtt lamDIONSQS.Arn
           batchSize: 1
 
+  search-DTOs:
+    handler: Lambda/build/SearchDTOs.handler
+    events:
+      - eventBridge:
+          eventBus: ${self:custom.eventBus}
+          pattern:
+            source:
+              - "lambdion.emit.composer"
 
 resources:
   Resources:
