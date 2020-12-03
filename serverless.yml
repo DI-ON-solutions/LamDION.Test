@@ -19,7 +19,7 @@ provider:
   memorySize: 128
   region: eu-west-1
   timeout: 10
-  profile: nodeModuleProfile
+  profile: aws_internal_test_2
   tags:
     dion:customer:title: DI-ON.solutions
     dion:customer:project: lamdion_development_${self:provider.stage}
@@ -35,6 +35,8 @@ provider:
         - "dynamodb:GetItem"
       Resource: !GetAtt lamDIONEventStoreDDB.Arn
   environment:
+    CUSTOMER: "DION"
+    PROJECT: "LamDION"
     EVENT_BUS_NAME: !GetAtt lamDIONEventBridge.Name
     DDB_TABLE_NAME: !Ref lamDIONEventStoreDDB
     QUEUE_URL: !Ref lamDIONSQS
@@ -43,19 +45,7 @@ provider:
 
 package:
   exclude:
-    - Lambda/node_modules/@types/**
-    - Lambda/node_modules/.cache/**
-    - Lambda/node_modules/.bin/**
-    - Lambda/node_modules/typescript/**
-    - Lambda/node_modules/@di-on.solutions/lamdion/node_modules/**
-    - Lambda/node_modules/@di-on.solutions/lamdion/src/**
-    - Lambda/node_modules/@di-on.solutions/lamdion/package.json
-    - Lambda/node_modules/@di-on.solutions/lamdion/package-lock.json
-    - Lambda/node_modules/@di-on.solutions/lamdion/README.md
-    - Lambda/node_modules/@di-on.solutions/lamdion/tsconfig.json
-    - Lambda/node_modules/@di-on.solutions/lamdion/config/**
-    - Lambda/node_modules/@di-on.solutions/lamdion/bin/**
-    - Lambda/node_modules/@di-on.solutions/lamdion/.*/**
+    - Lambda/node_modules/**
     - Lambda/src/**
     - Lambda/tsconfig.json
     - Lambda/.npmignore
@@ -68,7 +58,7 @@ package:
 
 functions:
   emitTitle:
-    handler: Lambda/build/EmitTitle.handler
+    handler: Lambda/build/Emit/EmitTitle.handler
     events:
       - http:
           method: GET
@@ -76,31 +66,49 @@ functions:
           payload: '2.0'
 
   emitComposer:
-    handler: Lambda/build/EmitComposer.handler
+    handler: Lambda/build/Emit/EmitComposer.handler
     events:
       - eventBridge:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "lambdion.emit.title"
+              - "DION.LamDION.Function.v1.Emit.Title"
+
+  emitDate:
+    handler: Lambda/build/Emit/EmitDate.handler
+    events:
+      - eventBridge:
+          eventBus: ${self:custom.eventBus}
+          pattern:
+            source:
+              - "DION.LamDION.Function.v1.Emit.Title"
+
+  consumeDate:
+    handler: Lambda/build/Consume/ConsumeDate.handler
+    events:
+      - eventBridge:
+          eventBus: ${self:custom.eventBus}
+          pattern:
+            source:
+              - "DION.LamDION.Function.v1.Emit.Date"
 
   consumeTitle:
-    handler: Lambda/build/ConsumeTitle.handler
+    handler: Lambda/build/Consume/ConsumeTitle.handler
     events:
       - eventBridge:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "lambdion.emit.title"
+              - "DION.LamDION.Function.v1.Emit.Title"
 
   alreadyEmitted:
-    handler: Lambda/build/AlreadyEmitted.handler
+    handler: Lambda/build/Emit/AlreadyEmitted.handler
     events:
       - eventBridge:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "lambdion.emit.title"
+              - "DION.LamDION.Function.v1.Emit.Title"
 
   eventStorePersist:
     handler: Lambda/build/EventStorePersist.handler
@@ -112,20 +120,20 @@ functions:
               - prefix: ""
 
   sqs-consume:
-    handler: Lambda/build/SQSConsume.handler
+    handler: Lambda/build/Consume/SQSConsume.handler
     events:
       - sqs:
           arn: !GetAtt lamDIONSQS.Arn
           batchSize: 1
 
   search-DTOs:
-    handler: Lambda/build/SearchDTOs.handler
+    handler: Lambda/build/Search/SearchDTOs.handler
     events:
       - eventBridge:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "lambdion.emit.composer"
+              - "DION.LamDION.Function.v1.Emit.Composer"
 
 resources:
   Resources:
@@ -155,7 +163,7 @@ resources:
       Properties:
         Description: "Test Event Bus for LamDION development"
         EventBusName: ${self:custom.eventBusName}
-        EventPattern: { "source": [ "lambdion.emit.title" ]}
+        EventPattern: { "source": [ "DION.LamDION.Function.v1.Emit.Title" ]}
         Targets:
           - Arn: !GetAtt lamDIONSQS.Arn
             Id: !GetAtt lamDIONSQS.QueueName

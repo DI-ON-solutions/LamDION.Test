@@ -6,7 +6,7 @@
   "scripts": {
     "link": "cd Lambda && npm link @di-on.solutions/lamdion",
     "build": "cd Lambda && npm run build",
-    "deploy": "serverless deploy",
+    "deploy": "AWS_SDK_LOAD_CONFIG=1 serverless deploy",
     "provideAWS": "npm run build && npm run deploy"
   },
   "author": "DI-ON.solutions",
