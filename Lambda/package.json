@@ -9,8 +9,7 @@
   "author": "DI-ON.solutions",
   "license": "ISC",
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.62",
-    "@types/aws-sdk": "^2.7.0",
+    "@types/aws-lambda": "^8.10.71",
     "@types/node": "^14.11.5",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3"
@@ -19,6 +18,6 @@
     "@di-on-solutions/lamdion": "file:../../LamDION",
     "@di-on.solutions/lamdion": "file:../../LamDION",
     "aws-lambda": "^1.0.6",
-    "aws-sdk": "^2.758.0"
+    "webpack": "^5.21.2"
   }
 }
