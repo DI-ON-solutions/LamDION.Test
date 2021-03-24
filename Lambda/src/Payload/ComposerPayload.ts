@@ -1,5 +1,9 @@
 import * as LamDION from "@di-on.solutions/lamdion";
+import {jsonObject, jsonMember} from "@di-on-solutions/lamdion";
 
-export interface ComposerPayload extends LamDION.EventPayload {
-    composer: string | undefined;
+@jsonObject
+export class ComposerPayload extends LamDION.EventPayload {
+
+    @jsonMember
+    public composer: string;
 }

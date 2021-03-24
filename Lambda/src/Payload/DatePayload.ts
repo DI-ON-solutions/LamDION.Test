@@ -1,5 +1,9 @@
 import * as LamDION from "@di-on.solutions/lamdion";
+import {jsonObject, jsonMember} from "@di-on-solutions/lamdion";
 
-export interface DatePayload extends LamDION.EventPayload {
-    date: Date;
+@jsonObject
+export class DatePayload extends LamDION.EventPayload {
+
+    @jsonMember
+    public date: Date;
 }

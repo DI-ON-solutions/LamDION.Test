@@ -1,5 +1,9 @@
 import * as LamDION from "@di-on.solutions/lamdion";
+import {jsonObject, jsonMember} from "@di-on-solutions/lamdion";
 
-export interface TitlePayload extends LamDION.EventPayload {
-    title: string | undefined;
+@jsonObject
+export class TitlePayload extends LamDION.EventPayload {
+
+    @jsonMember
+    public title: string | undefined;
 }

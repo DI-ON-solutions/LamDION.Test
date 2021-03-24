@@ -3,9 +3,8 @@ import * as AWSLambda from "aws-lambda";
 import {TitlePayload} from "../../Payload/TitlePayload";
 
 export const handler = LamDION.Bootstrap(async (event: any): Promise<AWSLambda.APIGatewayProxyResult> => {
-    let payload: TitlePayload = {
-        title: "Gute Nacht"
-    }
+    const payload = new TitlePayload();
+    payload.title = "Gute Nacht";
 
     const dto = new LamDION.EventDTO<TitlePayload>();
     dto.EventPayload = payload;
@@ -17,7 +16,7 @@ export const handler = LamDION.Bootstrap(async (event: any): Promise<AWSLambda.A
         }
     });
 
-    await eventBridge.emit(dto);
+    await eventBridge.emit(TitlePayload, dto);
 
     return {
         statusCode: 200,

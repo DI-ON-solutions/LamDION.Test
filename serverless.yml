@@ -19,7 +19,7 @@ provider:
   memorySize: 128
   region: eu-west-1
   timeout: 10
-  profile: aws_internal_test_2
+  profile: 092473279400_DION_App_Deployment
   tags:
     dion:customer:title: DI-ON.solutions
     dion:customer:project: lamdion_development_${self:provider.stage}
@@ -72,7 +72,7 @@ functions:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "DION.LamDION.Function.v1.Emit.Title"
+              - "DION.v1.Emit.Title"
 
   emitDate:
     handler: Lambda/build/Emit/EmitDate.handler
@@ -81,7 +81,7 @@ functions:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "DION.LamDION.Function.v1.Emit.Title"
+              - "DION.v1.Emit.Title"
 
   consumeDate:
     handler: Lambda/build/Consume/ConsumeDate.handler
@@ -90,7 +90,7 @@ functions:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "DION.LamDION.Function.v1.Emit.Date"
+              - "DION.v1.Emit.Date"
 
   consumeTitle:
     handler: Lambda/build/Consume/ConsumeTitle.handler
@@ -99,7 +99,7 @@ functions:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "DION.LamDION.Function.v1.Emit.Title"
+              - "DION.v1.Emit.Title"
 
   alreadyEmitted:
     handler: Lambda/build/Emit/AlreadyEmitted.handler
@@ -108,7 +108,17 @@ functions:
           eventBus: ${self:custom.eventBus}
           pattern:
             source:
-              - "DION.LamDION.Function.v1.Emit.Title"
+              - "DION.v1.Emit.Title"
+
+  search-DTOs:
+    handler: Lambda/build/Search/SearchDTOs.handler
+    events:
+      - eventBridge:
+          eventBus: ${self:custom.eventBus}
+          pattern:
+            source:
+              - "DION.v1.Emit.Composer"
+
 
   eventStorePersist:
     handler: Lambda/build/EventStorePersist.handler
@@ -125,15 +135,6 @@ functions:
       - sqs:
           arn: !GetAtt lamDIONSQS.Arn
           batchSize: 1
-
-  search-DTOs:
-    handler: Lambda/build/Search/SearchDTOs.handler
-    events:
-      - eventBridge:
-          eventBus: ${self:custom.eventBus}
-          pattern:
-            source:
-              - "DION.LamDION.Function.v1.Emit.Composer"
 
 resources:
   Resources:
@@ -163,7 +164,7 @@ resources:
       Properties:
         Description: "Test Event Bus for LamDION development"
         EventBusName: ${self:custom.eventBusName}
-        EventPattern: { "source": [ "DION.LamDION.Function.v1.Emit.Title" ]}
+        EventPattern: { "source": [ "DION.v1.Emit.Title" ]}
         Targets:
           - Arn: !GetAtt lamDIONSQS.Arn
             Id: !GetAtt lamDIONSQS.QueueName

@@ -1,9 +1,8 @@
 import * as LamDION from "@di-on.solutions/lamdion";
 import {TitlePayload} from "../../Payload/TitlePayload";
 
-export const handler = LamDION.AWSEventBridgeBoostrap<TitlePayload>(async (event): Promise<any> => {
+export const handler = LamDION.AWSEventBridgeBoostrap(TitlePayload, async (event): Promise<any> => {
     console.log("[LAMDION TEST]: Recieved following event:");
-    console.log(event);
 
     const eventStore = new LamDION.EventStore({
         tableName: process.env.DDB_TABLE_NAME,
